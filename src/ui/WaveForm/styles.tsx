@@ -15,9 +15,6 @@ const useStyles = makeStyles({
     padding: '2px 4px',
     marginBottom: '24px',
   },
-  nameContainer: {
-    textAlign: 'start',
-  },
 })
 
 export default useStyles

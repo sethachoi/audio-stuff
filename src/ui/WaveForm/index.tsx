@@ -4,7 +4,7 @@ import { WordType } from 'types'
 import { TranscriptContext } from 'state'
 import { convertToTimeString } from 'utils'
 import useStyles from './styles'
-import { Spike } from './components'
+import { Spike, SpikeGroup } from './components'
 
 type OwnedWord = WordType & {
   isMe: boolean
@@ -15,6 +15,8 @@ type OwnedWord = WordType & {
 
 const WaveForm: React.FunctionComponent = () => {
   const TranscriptState = useContext(TranscriptContext)
+  const [previewTime, setPreviewTime] = useState(0)
+  const [showPreview, setShowPreview] = useState(false)
   const [myPercentage, setMyPercentage] = useState('0%')
   const [otherPercentage, setOtherPercentage] = useState('0%')
 
@@ -56,7 +58,24 @@ const WaveForm: React.FunctionComponent = () => {
     setOtherPercentage(otherPercentageString)
   }, [mergedWords])
 
-  const calculateHasPassed = (end: number): boolean => currentTime > end
+  const calculateHasPassed = (end: number): boolean =>
+    TranscriptState.currentTime > end
+
+  const enablePreview = (time: number) => {
+    setShowPreview(true)
+    setPreviewTime(time)
+  }
+
+  const disablePreview = () => {
+    setShowPreview(false)
+  }
+
+  const generateTimeString = (): string => {
+    if (showPreview) {
+      return convertToTimeString(previewTime)
+    }
+    return convertToTimeString(TranscriptState.currentTime)
+  }
 
   return (
     <Grid
@@ -69,24 +88,13 @@ const WaveForm: React.FunctionComponent = () => {
       <Grid item container xs={12}>
         <Paper className={classes.time} elevation={0}>
           <Typography variant="caption">
-            {convertToTimeString(currentTime)} / {convertToTimeString(duration)}
+            {generateTimeString()} /{' '}
+            {convertToTimeString(TranscriptState.duration)}
           </Typography>
         </Paper>
       </Grid>
-      <Grid item container xs={12}>
-        <Grid container className={classes.nameContainer} item xs={1}>
-          <Grid item xs={4}>
-            <Typography variant="subtitle2" color="secondary">
-              {myPercentage}
-            </Typography>
-          </Grid>
-          <Grid item xs={8}>
-            <Typography variant="subtitle2" color="secondary">
-              You
-            </Typography>
-          </Grid>
-        </Grid>
-        <Grid item container xs={11} justify="space-around">
+      <SpikeGroup owner={'You'} percentage={myPercentage}>
+        <>
           {mergedWords.map((item) => (
             <Spike
               key={`item-${item.startTime}-${item.word}-${item.endTime}-me`}
@@ -96,27 +104,19 @@ const WaveForm: React.FunctionComponent = () => {
               }}
               hiddenSpike={!item.isMe}
               hasPassed={calculateHasPassed(item.end)}
+              enablePreview={() => {
+                enablePreview(item.end)
+              }}
+              disablePreview={disablePreview}
             />
           ))}
-        </Grid>
-      </Grid>
+        </>
+      </SpikeGroup>
       <Grid item container xs={12}>
         <Divider className={classes.divider} />
       </Grid>
-      <Grid item container xs={12}>
-        <Grid container className={classes.nameContainer} item xs={1}>
-          <Grid item xs={4}>
-            <Typography variant="subtitle2" color="primary">
-              {otherPercentage}
-            </Typography>
-          </Grid>
-          <Grid item xs={8}>
-            <Typography variant="subtitle2" color="primary">
-              Michael B.
-            </Typography>
-          </Grid>
-        </Grid>
-        <Grid item container xs={11} justify="space-around">
+      <SpikeGroup owner={'Michael B.'} percentage={otherPercentage}>
+        <>
           {mergedWords.map((item) => (
             <Spike
               key={`item-${item.startTime}-${item.word}-${item.endTime}-other`}
@@ -126,10 +126,14 @@ const WaveForm: React.FunctionComponent = () => {
               }}
               hiddenSpike={item.isMe}
               hasPassed={calculateHasPassed(item.end)}
+              enablePreview={() => {
+                enablePreview(item.end)
+              }}
+              disablePreview={disablePreview}
             />
           ))}
-        </Grid>
-      </Grid>
+        </>
+      </SpikeGroup>
     </Grid>
   )
 }

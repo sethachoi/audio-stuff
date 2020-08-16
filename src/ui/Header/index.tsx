@@ -43,12 +43,12 @@ const Header: React.FunctionComponent = () => {
           >
             <RotateLeft color="inherit" />
           </IconButton>
-          {playing && (
+          {TranscriptState.playing && (
             <IconButton color="primary" onClick={togglePlayAction}>
               <PauseCircleFilled fontSize="large" />
             </IconButton>
           )}
-          {!playing && (
+          {!TranscriptState.playing && (
             <IconButton color="primary" onClick={togglePlayAction}>
               <PlayCircleFilled fontSize="large" />
             </IconButton>

@@ -7,6 +7,8 @@ type Props = {
   hasPassed?: boolean
   person: 'Me' | string
   onClick(event: React.MouseEvent<HTMLElement>): void
+  enablePreview(event: React.MouseEvent<HTMLElement>): void
+  disablePreview(event: React.MouseEvent<HTMLElement>): void
 }
 
 const Spike: React.FunctionComponent<Props> = ({
@@ -14,10 +16,17 @@ const Spike: React.FunctionComponent<Props> = ({
   hasPassed = false,
   person,
   onClick,
+  enablePreview,
+  disablePreview,
 }: Props) => {
   const classes = useStyles({ hasPassed, person, hiddenSpike })
   return (
-    <Box className={classes.spike} onClick={onClick}>
+    <Box
+      onMouseEnter={enablePreview}
+      onMouseLeave={disablePreview}
+      className={classes.spike}
+      onClick={onClick}
+    >
       <ButtonBase>
         <div className={classes.spikeFiller} />
       </ButtonBase>

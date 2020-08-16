@@ -27,6 +27,14 @@ const useStyles = makeStyles((theme) => ({
       return theme.palette.primary.main
     },
     cursor: 'pointer',
+    '&:hover': {
+      opacity: ({ hasPassed }: Props) => {
+        if (hasPassed) {
+          return '1'
+        }
+        return '0.6'
+      },
+    },
   },
   spikeFiller: {
     width: '100%',

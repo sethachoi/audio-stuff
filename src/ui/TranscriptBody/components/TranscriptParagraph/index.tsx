@@ -47,7 +47,10 @@ const TranscriptParagraph: React.FunctionComponent<Props> = ({
   useEffect(() => {
     const startKeyFrame = parseFloat(words[0].startTime)
     const endKeyFrame = parseFloat(words[words.length - 1].endTime)
-    setIsActive(currentTime >= startKeyFrame && currentTime < endKeyFrame)
+    setIsActive(
+      TranscriptState.currentTime >= startKeyFrame &&
+        TranscriptState.currentTime < endKeyFrame
+    )
   }, [TranscriptState.currentTime, words])
 
   const classes = useStyles({ owner, isActive })
