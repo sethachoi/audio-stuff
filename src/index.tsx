@@ -10,12 +10,12 @@ const theme = createMuiTheme({
     primary: {
       main: '#189AF8',
       light: '#1A99F6',
-      dark: '#556C86'
+      dark: '#556C86',
     },
     secondary: {
-      main: '#8868E9'
-    }
-  }
+      main: '#8868E9',
+    },
+  },
 })
 
 ReactDOM.render(

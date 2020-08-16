@@ -1,18 +1,19 @@
 import React from 'react'
 import { Grid } from '@material-ui/core'
-import { Header } from 'ui'
+import { Header, WaveForm, TranscriptBody } from 'ui'
+import TranscriptProvider from 'state'
 import './App.css'
 
-
-const App: React.FC = () =>
-  (
-    <div className="App">
-      <Grid>
+const App: React.FC = () => (
+  <div className="App">
+    <TranscriptProvider>
+      <Grid container direction="column">
         <Header />
-        Hello
+        <WaveForm />
+        <TranscriptBody />
       </Grid>
-    </div>
-  )
-
+    </TranscriptProvider>
+  </div>
+)
 
 export default App
